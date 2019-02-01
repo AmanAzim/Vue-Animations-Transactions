@@ -25,6 +25,23 @@
                 <transition enter-active-calss="animated bounce" leave-active-class="animated shake">
                     <div class="alert alert-info" v-if="show">This is info</div>
                 </transition>
+                <hr>
+                <hr>
+
+                <button class="button button-primary" @click="load=!load">Load/Remove element</button>
+                <br><br>
+                <transition @before-enter="beforeEnter"
+                            @enter="enter"
+                            @after-enter="afterEnter"
+                            @after-enter-cancelled="afterEnterCancelled"
+                            @before-leave="beforeLeave"
+                            @leave="leave"
+                            @after-leave="afterLeave"
+                            @after-leave-cancelled="afterLeaveCancelled"
+                            :css="false">
+                    <div style="width:100px; height:100px; background-color: lightcoral"
+                         v-if="load"></div>
+                </transition>
 
             </div>
         </div>
@@ -37,6 +54,35 @@
             return {
                 show:true,
                 animationClass:'',
+                load:true,
+            }
+        },
+        methods:{
+            beforeEnter(el){
+                console.log('beforeEnter');
+            },
+            enter(el, done){
+                console.log('enter');
+                done();
+            },
+            afterEnter(el){
+                console.log('afterEnter');
+            },
+            afterEnterCancelled(el){
+                console.log('afterEnterCancelled');
+            },
+            beforeLeave(el){
+                console.log('beforeLeave');
+            },
+            leave(el, done){
+                console.log('leave');
+                done();
+            },
+            afterLeave(el){
+                console.log('afterLeave');
+            },
+            afterLeaveCancelled(el){
+                console.log('afterLeaveCancelled');
             }
         }
     }
