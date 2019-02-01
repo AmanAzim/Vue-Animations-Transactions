@@ -7,10 +7,17 @@
                 <button class="btn btn-primary" v-on:click="show=!show">Show Alert</button>
                 <br><br>
 
-                <transition name="fade">
-                    <div class="alert alert-info" v-if="show">This is info</div>
+                <select v-model="animationClass" class="form-control">
+                    <option value="fade">fade</option>
+                    <option value="slide">slide</option>
+                </select>
+
+                <transition v-bind:name="animationClass" mode="out-in">
+                    <div class="alert alert-info" v-if="show" key="info">This is info</div>
+                    <div class="alert alert-warning" key="warning" v-else>This is info</div>
                 </transition>
 
+                <hr>
                 <transition name="slide" type="animation" appear>
                     <div class="alert alert-info" v-if="show">This is info</div>
                 </transition>
@@ -29,6 +36,7 @@
         data() {
             return {
                 show:true,
+                animationClass:'',
             }
         }
     }
