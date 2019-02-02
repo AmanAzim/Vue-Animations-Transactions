@@ -38,9 +38,17 @@
                             @leave="leave"
                             @after-leave="afterLeave"
                             @after-leave-cancelled="afterLeaveCancelled"
-                            :css="false">
-                    <div style="width:100px; height:100px; background-color: lightcoral"
+                            :css="false"> <!--width is set by js below-->
+                    <div style="height:100px; background-color: lightcoral"
                          v-if="load"></div>
+                </transition>
+                    <br><br>
+                <transition @before-enter="beforeEnterBox"
+                            @enter="enterBox"
+                            @before-leave="beforeLeaveBox"
+                            @leave="leaveBox" :css="false">
+                    <div v-if="load">Box</div>
+
                 </transition>
 
             </div>
@@ -55,14 +63,27 @@
                 show:true,
                 animationClass:'',
                 load:true,
+                elementWidth:100,
             }
         },
         methods:{
             beforeEnter(el){
                 console.log('beforeEnter');
+                this.elementWidth=100;
+                el.style.width=this.elementWidth+'px';
+
             },
             enter(el, done){
                 console.log('enter');
+                let round=1;
+                const interval=setInterval( ()=>{
+                    el.style.width=(this.elementWidth + round*10)+'px';
+                    round++;
+                    if(round>20){
+                        clearInterval(interval);
+                        done();
+                    }
+                }, 20);
                 done();
             },
             afterEnter(el){
@@ -73,16 +94,50 @@
             },
             beforeLeave(el){
                 console.log('beforeLeave');
+                this.elementWidth=300;
+                el.style.width=this.elementWidth+'px';
             },
             leave(el, done){
                 console.log('leave');
-                done();
+                let round=1;
+                const interval=setInterval( ()=>{
+                    el.style.width=(this.elementWidth - round*10)+'px';
+                    round++;
+                    if(round>20){
+                        clearInterval(interval);
+                        done();
+                    }
+                }, 20);
             },
             afterLeave(el){
                 console.log('afterLeave');
             },
             afterLeaveCancelled(el){
                 console.log('afterLeaveCancelled');
+            },
+
+
+            beforeEnterBox(el){
+                el.style.backgroundColor='green';
+                el.style.width='50px';
+                el.style.height='50px';
+            },
+            enterBox(el,done){
+                el.style.backgroundColor='red';
+                el.style.width='100px';
+                el.style.height='100px';
+                done();
+            },
+            beforeLeaveBox(el){
+                el.style.backgroundColor='red';
+                el.style.width='100px';
+                el.style.height='100px';
+            },
+            leaveBox(el,done){
+                el.style.backgroundColor='green';
+                el.style.width='50px';
+                el.style.height='50px';
+                done();
             }
         }
     }
