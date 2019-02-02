@@ -50,6 +50,23 @@
                     <div v-if="load">Box</div>
 
                 </transition>
+                <br><br>
+
+                <button class="btn btn-primary" v-on:click="selectedComponent=='success-alert' ? selectedComponent='danger-alert' : selectedComponent='success-alert'">Toggle Component</button>
+                <transition name="fade" mode="out-in">
+                    <component :is="selectedComponent"></component>
+                </transition>
+                <hr><br><br>
+
+                <button class="btn btn-primary" v-on:click="addItem">Add item</button>
+                <ul class="list-group">
+                    <transition-group name="slide">
+                        <li class="list-group-item"
+                            v-for="(x, index) in numbers"
+                            v-on:click="removeItem(index)"
+                            style="cursor: pointer" :key="x">{{x}}</li>
+                    </transition-group>
+                </ul>
 
             </div>
         </div>
@@ -57,13 +74,21 @@
 </template>
 
 <script>
+    import SuccessAlert from './SuccessAlert.vue';
+    import DangerAlert from './DangerAlert.vue';
     export default {
+        components:{
+            'success-alert':SuccessAlert,
+            'danger-alert':DangerAlert,
+        },
         data() {
             return {
                 show:true,
                 animationClass:'',
                 load:true,
                 elementWidth:100,
+                selectedComponent:'success-alert',
+                numbers:[1,2,3,4,5],
             }
         },
         methods:{
@@ -138,6 +163,15 @@
                 el.style.width='50px';
                 el.style.height='50px';
                 done();
+            },
+
+
+            addItem(){
+                const position=Math.floor(Math.random()* this.numbers.length);
+                this.numbers.splice(position, 0, this.numbers.length+1);
+            },
+            removeItem(index){
+                this.numbers.splice(index, 1);
             }
         }
     }
@@ -173,6 +207,10 @@
     animation: slide-out 1s ease-out forwards;
     transition: opacity 3s;
     opacity: 0;
+    position: absolute;
+}
+.slide-move{
+    transition: transform 1s;
 }
 @keyframes slide-in {
     from{
